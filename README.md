@@ -1,10 +1,11 @@
 Usage:
 
 ```
+gem install rails
+
 rails new \
-  --database=postgresql \
   --webpacker=react \
-  -C -S -M \
+  -C -S -M -O \
   --skip-action-mailer \
   --skip-active-storage \
   --skip-action-text \

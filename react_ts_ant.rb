@@ -87,8 +87,6 @@ after_bundle do
           }
        TSX
 
-  rails_command "db:create"
-
   git add: "."
   git commit: "-m 'Initial Commit'"
 end
