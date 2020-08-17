@@ -39,7 +39,6 @@ after_bundle do
   run "rm app/javascript/packs/server_rendering.js"
   run "rm app/javascript/packs/hello_typescript.ts"
   run "rm app/javascript/packs/hello_react.jsx"
-  run "rm -rf app/assets/stylesheets"
 
   # hot reloading
   gsub_file "config/webpacker.yml", /hmr: false/, "hmr: true"
@@ -66,13 +65,15 @@ after_bundle do
          import * as React from 'react';
          import {Typography} from 'antd';
 
+         import * as css from "./HelloWorld.module.scss";
+
          type Props = {
            msg: string,
          };
 
          export default function HelloWorld({msg}: Props) {
            return (
-               <main style={{textAlign: "center", height: "100%"}}>
+               <main className={css.helloWorld}>
                  <header>
                    <Typography.Title level={1}>Hello, World!</Typography.Title>
                  </header>
@@ -86,6 +87,22 @@ after_bundle do
             );
           }
        TSX
+
+  file "app/javascript/assets.d.ts", <<~DTS
+         declare module "*.module.scss" {
+           const styles: { [className: string]: string };
+           export = styles;
+         }
+       DTS
+
+  file "app/javascript/components/HelloWorld.module.scss", <<~CSS
+         .helloWorld {
+           height: 100%;
+           text-align: center;
+         }
+       CSS
+
+  gsub_file "app/views/layouts/application.html.erb", /stylesheet_link_tag/, "stylesheet_pack_tag"
 
   git add: "."
   git commit: "-m 'Initial Commit'"
